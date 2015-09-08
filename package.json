@@ -1,0 +1,33 @@
+{
+  "name": "ng-zoom",
+  "version": "0.0.1",
+  "description": "image zoom for angular",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tutukin/ngZoom.git"
+  },
+  "keywords": [
+    "angularjs",
+    "zoom",
+    "image",
+    "directive"
+  ],
+  "author": "Andrei V. Toutoukine",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tutukin/ngZoom/issues"
+  },
+  "homepage": "https://github.com/tutukin/ngZoom#readme",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-html2js": "^0.3.4",
+    "gruntfile-gtx": "^0.3.0",
+    "require-directory": "^2.1.1"
+  }
+}

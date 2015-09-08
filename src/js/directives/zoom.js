@@ -8,7 +8,7 @@ angular.module('ngZoom').directive('zoom', [
         zoomFull: '@'
       },
       link: link,
-      templateUrl: 'ng-zoom.html'
+      templateUrl: 'partials/ng-zoom.html'
     };
 
     function link (scope, iElement, iAttrs) {
