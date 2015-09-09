@@ -27,6 +27,7 @@ angular.module('ngZoom').factory('DOMImage', [
         img = src.length ?
           src[0] :
           src;
+        cb(img);
       }
 
       return {

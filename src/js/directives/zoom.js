@@ -34,13 +34,19 @@ angular.module('ngZoom').directive('zoom', [
           width: _px(state.lens.size),
           height:_px(state.lens.size),
           background: 'transparent',
-          'background-position': _px(state.background.x) + ' ' + _px(state.background.y)
+          'background-position': _px(state.background.x) + ' ' + _px(state.background.y),
+          'background-repeat': 'no-repeat'
         };
 
         if ( state.background.url ) {
             scope.style['background-image'] = 'url('+state.background.url+')';
         }
 
+        if ( state.background.sizeX ) {
+            scope.style['background-size'] = '' + _px(state.background.sizeX) + ' auto';
+        }
+
+        // FIXME: this is for debugging!
         scope.isLensVisible = state.isShown;
       };
 

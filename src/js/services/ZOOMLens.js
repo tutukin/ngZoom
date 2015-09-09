@@ -15,17 +15,15 @@ angular.module('ngZoom').factory('ZOOMLens', [
             var bgX = null;
             var bgY = null;
             var bgUrl = null;
-
-            /*
-            var
-            var dst = DOMImage.create(scope.zoomFull, function (img) {
-              scope.background = 'url('+img.src+')';
-            });
-            */
+            var bgUrlDefault = null;
+            var bgXSize = null;
 
             return {
                 src: function (_src) {
-                    src = DOMImage.create(_src);
+                    src = DOMImage.create(_src, function (img) {
+                        bgUrlDefault = img.src;
+                        bgXSize = null;
+                    });
                 },
 
                 dst: function (_dst) {
@@ -33,6 +31,7 @@ angular.module('ngZoom').factory('ZOOMLens', [
 
                     dst = DOMImage.create(_dst, function (img) {
                       bgUrl = img.src;
+                      bgXSize = null;
                     });
                 },
 
@@ -59,16 +58,35 @@ angular.module('ngZoom').factory('ZOOMLens', [
 
                     var W = dst.naturalWidth();
                     var H = dst.naturalHeight();
-                    if ( ! W || ! H ) return;
+                    var scale;
 
-                    bgX = hls - W * dx / w;
-                    bgY = hls - W * dy / w;
+                    if ( ! W || ! H ) {
+                        W = src.naturalWidth();
+                        H = src.naturalHeight();
+                        scale = W / w;
+
+                        if ( scale < 2 ) {
+                            bgXSize = 2.0 * w;
+                            scale = 2.0;
+                        }
+
+                        bgX = hls - scale * dx;
+                        bgY = hls - scale * dy;
+
+                        bgUrl = null;
+                    }
+                    else {
+                        scale = W / w;
+                        bgX = hls - scale * dx;
+                        bgY = hls - scale * dy;
+                    }
                 },
 
                 state: _state
             };
 
             function _state () {
+
                 var state = {
                     isHidden: isHidden,
                     isShown: !isHidden,
@@ -82,9 +100,13 @@ angular.module('ngZoom').factory('ZOOMLens', [
                     background: {
                         x: bgX,
                         y: bgY,
-                        url: bgUrl
+                        url: bgUrl || bgUrlDefault
                     }
                 };
+
+                if ( bgXSize ) {
+                    state.background.sizeX = bgXSize;
+                }
 
                 return state;
             }
