@@ -14,12 +14,17 @@ angular.module('ngZoom').directive('zoom', [
     function link (scope, iElement, iAttrs) {
       iElement.addClass('zoom');
 
-      var src = DOMImage.create(iElement.find('img'));
-      var dst = DOMImage.create(scope.zoomFull, function (img) {
-        scope.background = 'url('+img.src+')';
+      var lens = ZOOMLens.create();
+
+      scope.$watch('zoom', function (url) {
+          if ( ! url ) return;
+          lens.src(iElement.find('img'));
       });
 
-      var lens = ZOOMLens.create(src, dst);
+      scope.$watch('zoomFull', function (url) {
+          if ( ! url ) return;
+          lens.dst(url);
+      });
 
       scope.updateStyle = function () {
         var state = lens.state();
@@ -28,9 +33,13 @@ angular.module('ngZoom').directive('zoom', [
           transform: _translate(state.lens.x, state.lens.y),
           width: _px(state.lens.size),
           height:_px(state.lens.size),
-          background: scope.background,
+          background: 'transparent',
           'background-position': _px(state.background.x) + ' ' + _px(state.background.y)
         };
+
+        if ( state.background.url ) {
+            scope.style['background-image'] = 'url('+state.background.url+')';
+        }
 
         scope.isLensVisible = state.isShown;
       };

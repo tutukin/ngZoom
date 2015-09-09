@@ -1,70 +1,94 @@
 angular.module('ngZoom').factory('ZOOMLens', [
-  function () {
-    return {
-      create: create
-    };
+    'DOMImage',
+    function (DOMImage) {
+        return {
+            create: create
+        };
 
-    function create (src, dst) {
-      var isHidden = false;
-      var lensX = null;
-      var lensY = null;
-      var lensSize = null;
-      var bgX = null;
-      var bgY = null;
+        function create () {
+            var src, dst;
 
-      return {
-        show: function () {
-          isHidden = false;
-        },
+            var isHidden = false;
+            var lensX = null;
+            var lensY = null;
+            var lensSize = null;
+            var bgX = null;
+            var bgY = null;
+            var bgUrl = null;
 
-        hide: function () {
-          isHidden = true;
-        },
+            /*
+            var
+            var dst = DOMImage.create(scope.zoomFull, function (img) {
+              scope.background = 'url('+img.src+')';
+            });
+            */
 
-        move: function (x, y) {
-          var w = src.width();
-          var h = src.height();
-          if ( ! w || ! h ) return;
+            return {
+                src: function (_src) {
+                    src = DOMImage.create(_src);
+                },
 
-          lensSize = 0.75 * ( w > h ? h : w );
+                dst: function (_dst) {
+                    bgUrl = null;
 
-          var hls = 0.5 * lensSize;
-          var dx = x - src.left();
-          var dy = y - src.top();
-          lensX = dx - hls;
-          lensY = dy - hls;
+                    dst = DOMImage.create(_dst, function (img) {
+                      bgUrl = img.src;
+                    });
+                },
 
-          var W = dst.naturalWidth();
-          var H = dst.naturalHeight();
-          if ( ! W || ! H ) return;
+                show: function () {
+                    isHidden = false;
+                },
 
-          bgX = hls - W * dx / w;
-          bgY = hls - W * dy / w;
-        },
+                hide: function () {
+                    isHidden = true;
+                },
 
-        state: _state
-      };
+                move: function (x, y) {
+                    var w = src.width();
+                    var h = src.height();
+                    if ( ! w || ! h ) return;
 
-      function _state () {
-          var state = {
-            isHidden: isHidden,
-            isShown: !isHidden,
+                    lensSize = 0.75 * ( w > h ? h : w );
 
-            lens: {
-              x: lensX,
-              y: lensY,
-              size: lensSize
-            },
+                    var hls = 0.5 * lensSize;
+                    var dx = x - src.left();
+                    var dy = y - src.top();
+                    lensX = dx - hls;
+                    lensY = dy - hls;
 
-            background: {
-              x: bgX,
-              y: bgY
+                    var W = dst.naturalWidth();
+                    var H = dst.naturalHeight();
+                    if ( ! W || ! H ) return;
+
+                    bgX = hls - W * dx / w;
+                    bgY = hls - W * dy / w;
+                },
+
+                state: _state
+            };
+
+            function _state () {
+                var state = {
+                    isHidden: isHidden,
+                    isShown: !isHidden,
+
+                    lens: {
+                        x: lensX,
+                        y: lensY,
+                        size: lensSize
+                    },
+
+                    background: {
+                        x: bgX,
+                        y: bgY,
+                        url: bgUrl
+                    }
+                };
+
+                return state;
             }
-          };
-
-          return state;
         }
+        return Lens;
     }
-    return Lens;
-  }
 ]);
