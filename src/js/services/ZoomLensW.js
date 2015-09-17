@@ -1,6 +1,6 @@
 angular.module('ngZoom').factory('ZoomLensW', [
-    'DOMImage', 'ZoomWindows',
-    function (DOMImage, ZoomWindows) {
+    'DOMImage',
+    function (DOMImage) {
         return {
             create: create
         };
@@ -8,48 +8,27 @@ angular.module('ngZoom').factory('ZoomLensW', [
         function create () {
             var src, dst;
 
-            var isHidden = false;
-            var lensX = null;
-            var lensY = null;
-            var lensSize = null;
-            var bgX = null;
-            var bgY = null;
             var bgUrl = null;
             var bgUrlDefault = null;
-            var bgXSize = null;
-
-            var zoomWindow = null;
+            var getZoomWindowSize = null;
 
             return {
-                src: function (_src) {
+                src: function (_src, cb) {
                     src = DOMImage.create(_src, function (img) {
-                        zoomWindow.setBackgroundSrc(img.src);
-                        bgUrlDefault = img.src;
-                        bgXSize = null;
+                        cb(img.src);
                     });
                 },
 
-                dst: function (_dst) {
+                dst: function (_dst, cb) {
                     bgUrl = null;
 
                     dst = DOMImage.create(_dst, function (img) {
-                        zoomWindow.setBackgroundSrc(img.src);
-                      bgUrl = img.src;
-                      bgXSize = null;
+                        cb(img.src);
                     });
                 },
 
-                zoomWindowName: function (name) {
-                    zoomWindow = ZoomWindows.get(name);
-                },
-
-                show: function () {
-                    //zoomWindow.isVisible = true;
-                    zoomWindow.show();
-                },
-
-                hide: function () {
-                    zoomWindow.hide();
+                setZoomWindowSizeGetter: function (size) {
+                    getZoomWindowSize = size;
                 },
 
                 move: function (x, y) {
@@ -57,76 +36,71 @@ angular.module('ngZoom').factory('ZoomLensW', [
                     var h = src.height();
                     if ( ! w || ! h ) return;
 
-                    //lensSize = 0.75 * ( w > h ? h : w );
-                    lensSize = zoomWindow.size();
+                    //zoomWindowSize = 0.75 * ( w > h ? h : w );
+                    var zoomWindowSize = getZoomWindowSize();
 
                     var dx = x - src.left();
                     var dy = y - src.top();
-                    lensX = dx - 0.5 * lensSize.width;
-                    lensY = dy - 0.5 * lensSize.height;
+                    lensX = dx - 0.5 * zoomWindowSize.width;
+                    lensY = dy - 0.5 * zoomWindowSize.height;
 
                     var W = dst.naturalWidth();
                     var H = dst.naturalHeight();
-                    var scale;
 
                     if ( ! W || ! H ) {
-                        W = src.naturalWidth();
-                        H = src.naturalHeight();
-                        scale = W / w;
-
-                        if ( scale < 2 ) {
-                            bgXSize = 2.0 * w;
-                            scale = 2.0;
-                        }
-
-                        bgX = hls - scale * dx;
-                        bgY = hls - scale * dy;
-
-                        bgUrl = null;
+                        return _fallbackCase(src, w, h, zoomWindowSize, dx, dy);
                     }
                     else {
-                        scale = W / w;
-                        bgX = 0.5*lensSize.width  - scale * dx;
-                        bgY = 0.5*lensSize.height - scale * dy;
+                        return _normalCase(src, w, h, W, H, zoomWindowSize, dx, dy);
                     }
-
-                    if ( bgX < lensSize.width - W )  bgX = lensSize.width - W;
-                    if ( bgX > 0 ) bgX = 0;
-                    if ( bgY < lensSize.height - H ) bgY = lensSize.height - H;
-                    if ( bgY > 0 ) bgY = 0;
-
-                    zoomWindow.setBackgroundPosition(bgX, bgY);
-                },
-
-                state: _state
+                }
             };
 
-            function _state () {
+            function _normalCase (src, w, h, W, H, zoomWindowSize, dx, dy) {
+                var scale = W / w;
+                var bgX = 0.5*zoomWindowSize.width  - scale * dx;
+                var bgY = 0.5*zoomWindowSize.height - scale * dy;
 
-                var state = {
-                    isHidden: true,
-                    isShown: false,
+                if ( bgX < zoomWindowSize.width - W )  bgX = zoomWindowSize.width - W;
+                if ( bgX > 0 ) bgX = 0;
+                if ( bgY < zoomWindowSize.height - H ) bgY = zoomWindowSize.height - H;
+                if ( bgY > 0 ) bgY = 0;
 
-                    lens: {
-                        x: lensX,
-                        y: lensY,
-                        size: lensSize
-                    },
-
-                    background: {
+                return {
+                    pos: {
                         x: bgX,
-                        y: bgY,
-                        url: bgUrl || bgUrlDefault
+                        y: bgY
                     }
                 };
+            }
 
-                if ( bgXSize ) {
-                    state.background.sizeX = bgXSize;
+            function _fallbackCase (src, w, h, zoomWindowSize, dx, dy) {
+                var W = src.naturalWidth();
+                var H = src.naturalHeight();
+                var scale = W / w;
+                var bgXSize, bgX, bgY;
+
+                if ( scale < 2 ) {
+                    bgXSize = 2.0 * w;
+                    scale = 2.0;
                 }
 
-                return state;
+                bgX = 0.5*zoomWindowSize.width  - scale * dx;
+                bgY = 0.5*zoomWindowSize.height - scale * dy;
+
+                if ( bgX < zoomWindowSize.width - scale*w )  bgX = zoomWindowSize.width - scale*w;
+                if ( bgX > 0 ) bgX = 0;
+                if ( bgY < zoomWindowSize.height - scale*h ) bgY = zoomWindowSize.height - scale*h;
+                if ( bgY > 0 ) bgY = 0;
+
+                return {
+                    pos: {
+                        x: bgX,
+                        y: bgY
+                    },
+                    size: bgXSize
+                };
             }
         }
-        return Lens;
     }
 ]);

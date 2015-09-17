@@ -21,13 +21,21 @@
   <body ng-app="ngZoomTest">
     <h1>ngZoom examples</h1>
 
+    <h2>Instant zoom lens</h2>
     <div class="wrapper" ng-controller="mainController">
       <div zoom="img/med.jpg" zoom-full="img/big.jpg" ></div>
     </div>
 
+    <h2>Lens with a «remote» zoom window</h2>
     <div class="wrapper small" ng-controller="mainController">
       <div zoom="img/sml.jpg" zoom-full="img/big.jpg" zoom-window-name="windowName"></div>
       <div zoom-window="windowName"></div>
+    </div>
+
+    <h2>Fallback for missing full-size image</h2>
+    <div class="wrapper small" ng-controller="mainController">
+      <div zoom="img/sml.jpg" zoom-full="img/notExisting.jpg" zoom-window-name="windowName2"></div>
+      <div zoom-window="windowName2"></div>
     </div>
 
     <script src="js/test.js" charset="utf-8"></script>

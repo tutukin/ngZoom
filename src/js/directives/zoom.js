@@ -1,6 +1,6 @@
 angular.module('ngZoom').directive('zoom', [
-  'ZoomLens', 'ZoomLensW', 'DOMImage',
-  function (ZoomLens, ZoomLensW, DOMImage) {
+  'ZoomLens', 'ZoomLensW', 'DOMImage', 'ZoomWindows',
+  function (ZoomLens, ZoomLensW, DOMImage, ZoomWindows) {
     return {
       restrict: 'A',
       scope:  {
@@ -29,61 +29,39 @@ angular.module('ngZoom').directive('zoom', [
 
 
     function _linkWindowed (scope, iElement, iAttrs) {
+        var zoomWindow = null;
         var lens = ZoomLensW.create();
 
         scope.background = 'transparent';
 
         scope.$watch('zoomWindowName', function (name) {
             if ( ! name ) return;
-            lens.zoomWindowName(name);
+            zoomWindow = ZoomWindows.get(name);
+            lens.setZoomWindowSizeGetter(zoomWindow.size);
         });
 
         scope.$watch('zoom', function (url) {
             if ( ! url ) return;
-            lens.src(iElement.find('img'));
+            lens.src(iElement.find('img'), zoomWindow.setDefaultBackgroundUrl);
         });
 
         scope.$watch('zoomFull', function (url) {
             if ( ! url ) return;
-            lens.dst(url);
+            lens.dst(url, zoomWindow.setBackgroundUrl);
         });
 
-        scope.updateStyle = function () {
-          var state = lens.state();
-
-          scope.style = {
-            transform: _translate(state.lens.x, state.lens.y),
-            width: _px(state.lens.size),
-            height:_px(state.lens.size),
-            background: 'transparent',
-            'background-position': _px(state.background.x) + ' ' + _px(state.background.y),
-            'background-repeat': 'no-repeat'
-          };
-
-          if ( state.background.url ) {
-              scope.style['background-image'] = 'url('+state.background.url+')';
-          }
-
-          if ( state.background.sizeX ) {
-              scope.style['background-size'] = '' + _px(state.background.sizeX) + ' auto';
-          }
-
-          scope.isLensVisible = state.isShown;
-        };
-
         iElement.on('mouseover', function () {
-          lens.show();
-          scope.$apply('updateStyle()');
+            zoomWindow.show();
         });
 
         iElement.on('mouseout', function () {
-          lens.hide();
-          scope.$apply('updateStyle()');
+            zoomWindow.hide();
         });
 
         iElement.on('mousemove', function (ev) {
-          lens.move(ev.clientX, ev.clientY);
-          scope.$apply('updateStyle()');
+          var data = lens.move(ev.clientX, ev.clientY);
+          if ( data.pos ) zoomWindow.setBackgroundPosition(data.pos);
+          if ( data.size ) zoomWindow.setBackgroundSize(data.size);
         });
     }
 

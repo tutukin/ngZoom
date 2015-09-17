@@ -19,6 +19,9 @@ angular.module('ngZoom').directive('zoomWindow',[
                 'background-position': '0 0'
             };
 
+            var defaultBackgroundUrl;
+            var backgroundUrl;
+
             scope.show = function () {
                 iElement.removeClass('hidden');
             };
@@ -31,15 +34,44 @@ angular.module('ngZoom').directive('zoomWindow',[
                 return iElement[0].getBoundingClientRect();
             };
 
-            scope.setBackgroundSrc = function (src) {
-                style['background-image'] = 'url('+src+')';
-                iElement.css(style);
+            scope.setBackgroundUrl = function (url) {
+                backgroundUrl = url;
+                _updateStyle('background-image', _url(url));
             };
 
-            scope.setBackgroundPosition = function (x, y) {
-                style['background-position'] = x + 'px ' + y + 'px';
-                iElement.css(style);
+            scope.setDefaultBackgroundUrl = function (url) {
+                defaultBackgroundUrl = url;
+                url = backgroundUrl || defaultBackgroundUrl;
+                _updateStyle('background-image', _url(url));
             };
+
+            scope.setBackgroundSize = function (w) {
+                _updateStyle('background-size', _pos(w, 'auto'));
+            };
+
+            scope.setBackgroundPosition = function (p) {
+                _updateStyle('background-position', _pos(p.x, p.y));
+            };
+
+            function _updateStyle (key, value) {
+                style[key] = value;
+                iElement.css(style);
+            }
+
+        }
+
+        function _px (value) {
+            return typeof value === 'number' ?
+                value + 'px' :
+                value;
+        }
+
+        function _pos (x, y) {
+            return _px(x) + ' ' + _px(y);
+        }
+
+        function _url( ref ) {
+            return 'url('+ ref +')';
         }
     }
 ]);
