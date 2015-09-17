@@ -11,9 +11,11 @@
     <script src="angular/angular.js" charset="utf-8"></script>
     <script src="js/module.js" charset="utf-8"></script>
     <script src="js/directives/zoom.js" charset="utf-8"></script>
-    <script src="js/directives/zoomWindowName.js" charset="utf-8"></script>
+    <script src="js/directives/zoomWindow.js" charset="utf-8"></script>
     <script src="js/services/DOMImage.js" charset="utf-8"></script>
     <script src="js/services/ZoomLens.js" charset="utf-8"></script>
+    <script src="js/services/ZoomLensW.js" charset="utf-8"></script>
+    <script src="js/services/ZoomWindows.js" charset="utf-8"></script>
   </head>
 
   <body ng-app="ngZoomTest">
@@ -24,8 +26,8 @@
     </div>
 
     <div class="wrapper small" ng-controller="mainController">
-      <div zoom="img/sml.jpg" zoom-full="img/big.jpg" zoom-window="windowName"></div>
-      <div zoom-window-name="windowName"></div>
+      <div zoom="img/sml.jpg" zoom-full="img/big.jpg" zoom-window-name="windowName"></div>
+      <div zoom-window="windowName"></div>
     </div>
 
     <script src="js/test.js" charset="utf-8"></script>

@@ -5,6 +5,7 @@ body {
 .wrapper {
   width: 200px;
   margin-bottom: 2em;
+  cursor: zoom-in;
 }
 
 .wrapper.small {
@@ -20,4 +21,8 @@ body {
   border: 3px solid #ccc;
   width: 200px;
   height: 80px;
+}
+
+.zoom-window.hidden {
+  display: none;
 }
