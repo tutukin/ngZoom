@@ -1,4 +1,4 @@
-angular.module('ngZoom').factory('ZOOMLens', [
+angular.module('ngZoom').factory('ZoomLens', [
     'DOMImage',
     function (DOMImage) {
         return {

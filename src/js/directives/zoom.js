@@ -1,6 +1,6 @@
 angular.module('ngZoom').directive('zoom', [
-  'ZOOMLens', 'DOMImage',
-  function (ZOOMLens, DOMImage) {
+  'ZoomLens', 'DOMImage',
+  function (ZoomLens, DOMImage) {
     return {
       restrict: 'A',
       scope:  {
@@ -14,7 +14,7 @@ angular.module('ngZoom').directive('zoom', [
     function link (scope, iElement, iAttrs) {
       iElement.addClass('zoom');
 
-      var lens = ZOOMLens.create();
+      var lens = ZoomLens.create();
 
       scope.$watch('zoom', function (url) {
           if ( ! url ) return;
