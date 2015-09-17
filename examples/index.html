@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>ngZoom examples</title>
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+    <link rel="stylesheet" href="/css/ng-zoom.css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="/css/style.css" media="screen" title="no title" charset="utf-8">
+
+    <script src="angular/angular.js" charset="utf-8"></script>
+    <script src="js/module.js" charset="utf-8"></script>
+    <script src="js/directives/zoom.js" charset="utf-8"></script>
+    <script src="js/directives/zoomWindowName.js" charset="utf-8"></script>
+    <script src="js/services/DOMImage.js" charset="utf-8"></script>
+    <script src="js/services/ZOOMLens.js" charset="utf-8"></script>
+  </head>
+
+  <body ng-app="ngZoomTest">
+    <h1>ngZoom examples</h1>
+
+    <div class="wrapper" ng-controller="mainController">
+      <div zoom="img/med.jpg" zoom-full="img/big.jpg" ></div>
+    </div>
+
+    <div class="wrapper small" ng-controller="mainController">
+      <div zoom="img/sml.jpg" zoom-full="img/big.jpg" zoom-window="windowName"></div>
+      <div zoom-window-name="windowName"></div>
+    </div>
+
+    <script src="js/test.js" charset="utf-8"></script>
+  </body>
+</html>

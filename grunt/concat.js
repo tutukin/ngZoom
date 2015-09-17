@@ -1,7 +1,8 @@
 module.exports = {
     build: {
         options: {
-            sourceMap: false
+            sourceMap: false,
+            process: _processor
         },
         files: {
             'build/ng-zoom.js': [
@@ -16,3 +17,13 @@ module.exports = {
         }
     }
 };
+
+
+function _processor (src, filepath) {
+    if ( filepath.match(/module.js$/) ) return _processModuleJs(src, filepath);
+    return src;
+}
+
+function _processModuleJs (src, filepath) {
+    return src.replace('/*TEMPLATES*/', "'ngZoom.Templates'");
+}

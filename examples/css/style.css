@@ -1,0 +1,23 @@
+body {
+  margin-left: 3em;
+}
+
+.wrapper {
+  width: 200px;
+  margin-bottom: 2em;
+}
+
+.wrapper.small {
+  position: relative;
+  top:0;
+  left: 0;
+  width: 60px;
+}
+
+.zoom-window {
+  position: absolute;
+  top: 0; left: 220px;
+  border: 3px solid #ccc;
+  width: 200px;
+  height: 80px;
+}

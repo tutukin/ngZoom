@@ -1,0 +1,27 @@
+{
+  "name": "ngZoom",
+  "version": "0.0.2",
+  "homepage": "https://github.com/tutukin/ngZoom",
+  "authors": [
+    "Andrei V. Toutoukine <toutoukine@gmail.com>"
+  ],
+  "description": "image zoom for angular",
+  "main": "build/ng-zoom.js",
+  "keywords": [
+    "zoom",
+    "image",
+    "angularjs",
+    "lens"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "angular": "angularjs#~1.4.5"
+  }
+}

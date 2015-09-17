@@ -1,1 +1,1 @@
-angular.module('ngZoom', ['ngZoom.Templates']);
+angular.module('ngZoom', [/*TEMPLATES*/]);

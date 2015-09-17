@@ -292,3 +292,16 @@ angular.module('ngZoom').directive('zoom', [
       return 'translate(' + _px(x) + ', ' + _px(y) + ')';
     }
 }]);
+
+angular.module('ngZoom').directive('zoomWindowName',[
+    function () {
+        return {
+            restrict    : 'A',
+            link        : link
+        };
+
+        function link (scope, iElement, iAttrs) {
+            iElement.addClass('zoom-window');
+        }
+    }
+]);
