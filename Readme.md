@@ -20,9 +20,9 @@ somewhere in css:
 }
 ```
 
+See examples.
+
 ## TODO
 
-1. Build system
-1. Bower config
-1. Docs
-1. Examples
+1. Write docs
+1. Implement min-scale, max-scale attributes
