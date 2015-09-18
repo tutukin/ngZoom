@@ -45,22 +45,28 @@ angular.module('ngZoom').factory('DOMImage', [
 
       return {
         height: function height () {
-          return _get('actual', 'height');
+            if ( ! isReady() ) return null;
+            return img.getBoundingClientRect().height;
         },
         width: function width () {
-          return _get('actual', 'width');
+            if ( ! isReady() ) return null;
+            return img.getBoundingClientRect().width;
         },
         top: function top () {
-          return _get('actual', 'top');
+            if ( ! isReady() ) return null;
+            return img.getBoundingClientRect().top;
         },
         left: function left () {
-          return _get('actual', 'left');
+            if ( ! isReady() ) return null;
+            return img.getBoundingClientRect().left;
         },
         naturalHeight: function naturalHeight () {
-          return _get('natural', 'height');
+            if ( ! isReady() ) return null;
+            return img.naturalHeight;
         },
         naturalWidth: function naturalWidth () {
-          return _get('natural', 'width');
+            if ( ! isReady() ) return null;
+            return img.naturalWidth;
         },
 
         isReady: isReady
@@ -68,30 +74,6 @@ angular.module('ngZoom').factory('DOMImage', [
 
       function isReady () {
         return img !== null && img.complete;
-      }
-
-      function _update () {
-        if ( ! isReady() ) {
-          _sizes.actual = null;
-          _sizes.natural = null;
-        }
-        else {
-          _sizes.actual = img.getBoundingClientRect();
-
-          _sizes.natural = {
-            width: img.naturalWidth,
-            height: img.naturalHeight
-          };
-        }
-      }
-
-      function _get (type, key) {
-        if ( typeof _sizes[type] === 'undefined' ) throw Error('unknown sizes type: ' + type);
-        if ( _sizes[type] === null ) _update();
-
-        return _sizes[type] ?
-          _sizes[type][key] :
-          null;
       }
     }
   }
